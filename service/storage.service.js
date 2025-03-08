@@ -1,44 +1,64 @@
 import { homedir } from 'os'
-//! tmpdir, platform, arch, cpus, freemem, totalmem, networkInterfaces, userInfo, uptime, type, release, endianness, loadavg, constants
 import { join } from 'path'
-//! , basename, dirname, extname, relative, isAbsolute, resolve, sep
+import { writeFile, readFile } from 'fs'
+import chalk from 'chalk'
+
 const log = console.log
 const path = join( homedir(), 'weather_data.json' )
-export function saveData ( answer )
+
+function addCity ( answer )
+{
+    writeFile( path, JSON.stringify( answer ), err =>
+    {
+        if ( err ) log( err )
+        else
+        {
+            log( `City ${ chalk.green( answer.city ) } was ${ chalk.green( 'saved' )}` )
+            log( chalk.yellow( 'write your token for Open Weather' ) )
+        }
+    } )
+}
+async function getExistFile ( path )
+{
+    return new Promise( ( resolve, reject ) =>
+    {
+        readFile( path, 'utf-8', ( err, data ) =>
+        {
+            if ( err ) reject( err )
+            else resolve( data )
+        } )
+    })
+}
+function rewriteFile ( file, answer, property, logString, func )
+{
+    if ( file )
+            {
+                file = JSON.parse( file )
+                file = { ...file, [ property ]: answer[ property ] }
+                writeFile( path, JSON.stringify( file ), err =>
+                {
+                    if ( err ) log( err )
+                    else log( logString )
+                })
+    }
+    else if ( property === 'city' ) func( answer )
+    else func()
+}
+export async function saveData( answer )
 {
     switch ( Object.keys( answer )[0] ) {
         case 'city':
-
-            return Object.keys( answer )[0]
+            let fileCity = await getExistFile( path )
+            const strCity = `City ${ chalk.green( answer.city ) } was ${ chalk.green( 'saved' )}`
+            rewriteFile( fileCity, answer, 'city', strCity, addCity )
+            break
         case 'token':
-
-            return 'token'
+            let fileToken = await getExistFile( path )
+            const strToken = `Token ${ answer.token } was saved`
+            rewriteFile( fileToken, answer, 'token', strToken, () => log( chalk.red( 'Write city before token!' )) )
+            break
         default:
-            return answer
+            log('Somethig went wrong!')
+            break
     }
 }
-//! from 'os'
-//* log( homedir() )
-//* log( tmpdir() )
-//* log( platform() )
-//* log( arch() )
-//* log( cpus() )
-//* log( freemem(), 'bytes' )
-//* log( totalmem() )
-//* log( networkInterfaces() )
-//* log( userInfo() )
-//* log( uptime() )
-//* log( type() )
-//* log( release() )
-//* log( endianness() )
-// // log( loadavg() ) // only UNIX
-//* log( constants )
-//! from 'path'
-//* log( path )
-//* log( dirname( path ) )
-//* log( basename( path ) )
-//* log( extname( path ) )
-//* log( relative( path, dirname( path ) ) )
-//* log( isAbsolute( path ) )
-//* log( resolve( '..' ) )
-//* log( sep )
