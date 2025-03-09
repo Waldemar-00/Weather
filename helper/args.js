@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 export function getAnswer ()
 {
-    const [ _executer, _file, ...rest ] = process.argv //? === const findArgs = process.argv.slice( 1 )
+    const [ _executer, _file, ...rest ] = process.argv
     const help = `${ chalk.yellow( "use next commands:" ) }
         ${ chalk.green( "'-h' - get help" ) }
         ${ chalk.green( "'-c' [city] - set a city" ) }

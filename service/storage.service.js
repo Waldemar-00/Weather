@@ -4,7 +4,7 @@ import { writeFile, readFile } from 'fs'
 import chalk from 'chalk'
 
 const log = console.log
-const path = join( homedir(), 'weather_data.json' )
+export const path = join( homedir(), 'weather_data.json' )
 
 function addCity ( answer )
 {
@@ -18,7 +18,7 @@ function addCity ( answer )
         }
     } )
 }
-async function getExistFile ( path )
+export async function getExistFile ( path )
 {
     return new Promise( ( resolve, reject ) =>
     {
