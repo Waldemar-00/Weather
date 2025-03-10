@@ -1,49 +1,72 @@
-import https from 'https'
 import { getExistFile, path } from './storage.service.js'
 import { getAnswer } from '../helper/args.js'
+import axios from 'axios'
+import chalk from 'chalk'
 const log = console.log
-let city = null
-let token = null
-let file = await getExistFile( path )
-if ( file )
-{
-    file = JSON.parse( file )
-    city = file.city
-    token = file.token
-    const url = new URL( 'https://api.openweathermap.org/data/2.5/weather' )
-    url.searchParams.append( 'q', city )
-    url.searchParams.append( 'appid', token )
-    const requestOptions = {
-        hostname: url.hostname,
-        port: url.port || 443, // 433 default,
-        path: url.pathname + url.search,
-        method: 'GET'
+const file = JSON.parse( await getExistFile( path ) )
+const url = 'https://api.openweathermap.org/data/2.5/weather'
+const params = {
+    params: {
+        q: file.city,
+        appid: file.token,
+        units: 'metric'
     }
-
-    const request = https.request( requestOptions, ( res ) =>
+}
+async function getWeather ( url, params )
+{
+    try {
+        const { data } = await axios.get( url, params )
+        return data
+    } catch ( error )
     {
-        let data = ''
-        res.on( 'data', chunk => data += chunk )
-        res.on( 'end', () => log( data ))
-    } )
-    request.on('error', ( err ) => { log( err ) })
-    request.end()
+        if ( error.response ) log( error.response.status, error.response.data.message )
+        else log( error )
+    }
+}
+function printWeather ( { coord, weather, main, wind, sys, name, visibility   } )
+{
+    log( `${ chalk.green( sys.country ) }` )
+    log( `${ chalk.green( name ) }` )
+    log( `${ chalk.green( 'Sea_level:' )} ${ chalk.yellow( main.sea_level ) }` )
+    log( `${ chalk.green( 'Longitude' ) }: ${ chalk.yellow( coord.lon ) } ${ chalk.green( 'Latitude:' ) } ${ chalk.yellow( coord.lat ) }` )
+    log( `${ chalk.blueBright( weather[ 0 ].main ) }: ${ chalk.blueBright( weather[ 0 ].description ) }` )
+    log( `${ chalk.blueBright( 'Temperature:' ) } ${ chalk.yellow( main.temp ) }` )
+    log( `${ chalk.blueBright( 'Feels_like:' ) } ${ chalk.yellow( main.feels_like ) }` )
+    log( `${ chalk.blueBright( 'Humidity:' ) } ${ chalk.yellow( main.humidity ) }` )
+    log( `${ chalk.blueBright( 'Visibility:' ) } ${ chalk.yellow( visibility ) }` )
+    log( `${ chalk.blueBright( 'Wind:' ) } ${ chalk.yellow( wind.speed ) }` )
+}
+if ( file ) printWeather( await getWeather ( url, params ) )
+else log( getAnswer() )
 
-} else log( getAnswer() )
-
-//* https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={ api_token }
-//* http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
-
-//* async function weatherRequest ()
-//* {
-//*     const url = new URL('https://api.openweathermap.org/data/2.5/weather')
-//*     url.searchParams.append( 'q', 'Soligorsk' )
-//*     url.searchParams.append( 'appid', '888521c03fd7875a98c5ad6292c84b70' )
-//*     https.get( url.href, response =>
-//*     {
-//*         let data = ''
-//*         response.on( 'data', chunk => data += chunk )
-//*         response.on( 'end', () => log( data ) )
-//*     } ).on( 'error', err => log( err ) )
-//* }
-//* weatherRequest ()
+// {
+//   coord: { lon: 27.5415, lat: 52.7876 },
+//   weather: [
+//     {
+//       id: 804,
+//       main: 'Clouds',
+//       description: 'overcast clouds',
+//       icon: '04n'
+//     }
+//   ],
+//   base: 'stations',
+//   main: {
+//     temp: 9.63,
+//     feels_like: 7.61,
+//     temp_min: 9.63,
+//     temp_max: 9.63,
+//     pressure: 1005,
+//     humidity: 60,
+//     sea_level: 1005,
+//     grnd_level: 987
+//   },
+//   visibility: 10000,
+//   wind: { speed: 3.86, deg: 160, gust: 9.74 },
+//   clouds: { all: 99 },
+//   dt: 1741626807,
+//   sys: { country: 'BY', sunrise: 1741581371, sunset: 1741622656 },
+//   timezone: 10800,
+//   id: 622428,
+//   name: 'Salihorsk',
+//   cod: 200
+// }
