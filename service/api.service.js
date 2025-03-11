@@ -38,35 +38,3 @@ function printWeather ( { coord, weather, main, wind, sys, name, visibility   } 
 }
 if ( file ) printWeather( await getWeather ( url, params ) )
 else log( getAnswer() )
-
-// {
-//   coord: { lon: 27.5415, lat: 52.7876 },
-//   weather: [
-//     {
-//       id: 804,
-//       main: 'Clouds',
-//       description: 'overcast clouds',
-//       icon: '04n'
-//     }
-//   ],
-//   base: 'stations',
-//   main: {
-//     temp: 9.63,
-//     feels_like: 7.61,
-//     temp_min: 9.63,
-//     temp_max: 9.63,
-//     pressure: 1005,
-//     humidity: 60,
-//     sea_level: 1005,
-//     grnd_level: 987
-//   },
-//   visibility: 10000,
-//   wind: { speed: 3.86, deg: 160, gust: 9.74 },
-//   clouds: { all: 99 },
-//   dt: 1741626807,
-//   sys: { country: 'BY', sunrise: 1741581371, sunset: 1741622656 },
-//   timezone: 10800,
-//   id: 622428,
-//   name: 'Salihorsk',
-//   cod: 200
-// }
