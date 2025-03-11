@@ -1,10 +1,10 @@
 {
-  "name": "weather-cli",
+  "name": "weather-handle",
   "version": "1.0.0",
   "description": "CLI for getting weather",
   "main": "weather.js",
   "bin": {
-    "weather": "node weather.js"
+    "weather": "weather.js"
   },
   "type": "module",
   "scripts": {
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Waldemar-00/Weather#readme",
   "dependencies": {
     "axios": "^1.8.2",
-    "chalk": "^5.4.1"
+    "chalk": "^5.4.1",
+    "npm": "^11.2.0"
   }
 }
