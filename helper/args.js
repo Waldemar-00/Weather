@@ -6,7 +6,7 @@ export function getAnswer ()
         ${ chalk.green( "'-h' - get help" ) }
         ${ chalk.green( "'-c' [city] - set a city" ) }
         ${ chalk.green("'-t' [api_token] - save a token" ) }`
-    if ( rest[ 0 ] && rest[ 1 ] )
+    if ( (rest[ 0 ] && rest[ 1 ] ) || rest[0] === '-w' )
     {
         switch ( rest[ 0 ] ) {
             case '-h':
@@ -15,6 +15,8 @@ export function getAnswer ()
                 return { 'city': rest[ 1 ] }
             case '-t':
                 return { 'token': rest[ 1 ] }
+            case '-w':
+                return 'w'
             default:
                 return help
         }

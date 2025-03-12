@@ -1,10 +1,11 @@
 {
   "name": "weather-handle",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "CLI for getting weather",
   "main": "weather.js",
   "bin": {
-    "weather": "weather.js"
+    "weather": "weather.js",
+    "get": "service/api.service.js"
   },
   "type": "module",
   "scripts": {
