@@ -1,14 +1,14 @@
 import { homedir } from 'os'
-import { join } from 'path'
+import { join, normalize } from 'path'
 import { writeFile, readFile } from 'fs'
 import chalk from 'chalk'
 
 const log = console.log
-export const path = join( homedir(), 'weather_data.json' )
+export const path = normalize( join( homedir(), 'weather_data.json' ) )
 
 function addCity ( answer )
 {
-    writeFile( path, JSON.stringify( answer ), err =>
+    writeFile( path, JSON.stringify( answer ),{ encoding: 'utf8', flag: 'w' }, err =>
     {
         if ( err ) log( err )
         else
@@ -20,11 +20,11 @@ function addCity ( answer )
 }
 export async function getExistFile ( path )
 {
-    return new Promise( ( resolve, reject ) =>
+    return new Promise( ( resolve, _reject ) =>
     {
         readFile( path, 'utf-8', ( err, data ) =>
         {
-            if ( err ) reject( err )
+            if ( err ) resolve( null )
             else resolve( data )
         } )
     })
@@ -49,6 +49,7 @@ export async function saveData( answer )
     switch ( Object.keys( answer )[0] ) {
         case 'city':
             let fileCity = await getExistFile( path )
+            if ( !fileCity ) addCity ( answer )
             const strCity = `City ${ chalk.green( answer.city ) } was ${ chalk.green( 'saved' )}`
             rewriteFile( fileCity, answer, 'city', strCity, addCity )
             break
@@ -58,7 +59,7 @@ export async function saveData( answer )
             rewriteFile( fileToken, answer, 'token', strToken, () => log( chalk.red( 'Write city before token!' )) )
             break
         default:
-            log('Somethig went wrong!')
+            addCity ( answer )
             break
     }
 }

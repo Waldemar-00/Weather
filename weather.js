@@ -5,7 +5,7 @@ import { getOpenWeather } from './service/api.service.js'
 function initCLI ()
 {
     const answer = getAnswer()
-    if ( typeof answer === 'string' && answer !== 'w' ) console.log( answer, 'Answer' )
+    if ( typeof answer === 'string' && answer !== 'w' ) console.log( answer )
     if ( answer.city || answer.token )
     {
         saveData( answer )
