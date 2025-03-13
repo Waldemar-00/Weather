@@ -49,7 +49,7 @@ export async function saveData( answer )
     switch ( Object.keys( answer )[0] ) {
         case 'city':
             let fileCity = await getExistFile( path )
-            if ( !fileCity ) addCity ( answer )
+            if ( !fileCity ) return addCity ( answer )
             const strCity = `City ${ chalk.green( answer.city ) } was ${ chalk.green( 'saved' )}`
             rewriteFile( fileCity, answer, 'city', strCity, addCity )
             break
