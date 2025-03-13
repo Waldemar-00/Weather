@@ -10,8 +10,8 @@ export async function getOpenWeather ()
     const url = 'https://api.openweathermap.org/data/2.5/weather'
     const params = {
         params: {
-            q: file.city,
-            appid: file.token,
+            q: file?.city,
+            appid: file?.token,
             units: 'metric'
         }
     }
@@ -39,6 +39,9 @@ export async function getOpenWeather ()
         log( `${ chalk.blueBright( 'Visibility:' ) } ${ chalk.yellow( visibility ) }` )
         log( `${ chalk.blueBright( 'Wind:' ) } ${ chalk.yellow( wind.speed ) }` )
     }
-    if ( file ) printWeather( await getWeather ( url, params ) )
+    if ( file?.city && file?.token ) printWeather( await getWeather( url, params ) )
+    else if(getAnswer() === 'w') log( `${ chalk.yellow( "at first add next data:" ) }
+        ${ chalk.green( "'-c' [city] - set a city" ) }
+        ${ chalk.green( "'-t' [api_token] - save a token" ) }` )
     else log( getAnswer() )
 }

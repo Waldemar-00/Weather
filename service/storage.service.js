@@ -55,7 +55,7 @@ export async function saveData( answer )
             break
         case 'token':
             let fileToken = await getExistFile( path )
-            const strToken = `Token ${ answer.token } was saved`
+            const strToken = `Token ${ chalk.green( answer.token ) } was ${ chalk.green( 'saved' )}`
             rewriteFile( fileToken, answer, 'token', strToken, () => log( chalk.red( 'Write city before token!' )) )
             break
         default:

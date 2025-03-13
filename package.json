@@ -1,6 +1,6 @@
 {
   "name": "weather-handle",
-  "version":"1.0.9",
+  "version":"1.0.12",
   "description": "CLI for getting weather",
   "main": "weather.js",
   "bin": {
